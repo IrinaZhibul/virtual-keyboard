@@ -15,4 +15,17 @@
     margin: 5px;
     padding: 5px 15px;
     font-size: 24px;
+    transition:ease-in 0.5s;
+}
+
+.btn:hover {
+    background-color: beige;
+}
+
+.btn:focus {
+    background-color: beige;
+}
+
+.btn:active {
+    background-color: burlywood;
 }
