@@ -1,0 +1,46 @@
+.container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    width: 960px;
+    margin: 0 auto 20px;
+}
+
+.textarea{
+    width: 940px;
+    margin-left: 5px;
+    height: 200px;
+}
+
+.btn {
+    background-color: gainsboro;
+    border: 1px solid;
+    margin: 5px;
+    padding: 5px 5px;
+    font-size: 24px;
+    transition:ease-in 0.5s;
+}
+
+.pressed{
+    background-color: blueviolet;
+    border-radius: 10px;
+}
+
+.btn:hover {
+    background-color: lavender;
+}
+
+.btn:focus {
+    background-color: beige;
+    border-radius: 10px;
+}
+
+.btn:active {
+    background-color: blueviolet;
+    border-radius: 10px;
+}
+
+.text {
+    text-align: center;
+    margin: 5px;
+}
