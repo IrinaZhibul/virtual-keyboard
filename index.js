@@ -1,7 +1,6 @@
 import { keysEn } from "./keys-en.js";
 import { keysBy } from "./keys-by.js";
 
-
 let keys;
 let isCapsLock = false;
 
@@ -10,7 +9,6 @@ const RIGHT_SHIFT_KEY_CODE = "ShiftRight";
 const LEFT_CONTROL_KEY_CODE = "ControlLeft";
 const RIGHT_CONTROL_KEY_CODE = "ControlRight";
 let currentLanguage;
-let cursorPosition;
 initKeys();
 
 const container = document.createElement('div');
@@ -29,14 +27,6 @@ document.body.appendChild(text2);
 text2.textContent = 'Для переключения языка комбинация: левыe shift + ctrl';
 
 
-textarea.addEventListener('select', function(event) {
-    debugger;
-    const selectionStart = event.target.selectionStart;
-    const selectionEnd = event.target.selectionEnd;
-    console.log('Cursor position changed:', selectionStart, selectionEnd);
-  });
-
-
 let buttons = keys.map((key) => {
     const button = document.createElement('button');
     button.classList = "btn";
@@ -47,44 +37,62 @@ let buttons = keys.map((key) => {
     return button;
 });
 
+function isLetter(str) {
+    return str.length === 1 && str.match(/[a-zA-Zа-яА-ЯЁёіІўЎ]/i);
+  }
 
 document.addEventListener('keydown', (event) => {
+    if (event.code == LEFT_SHIFT_KEY_CODE || event.code == RIGHT_SHIFT_KEY_CODE) {
+        buttons.forEach((btn) => {
+            let foundedKey = keys.find(x=>x.code == btn.getAttribute('code'))
+            if(foundedKey){
+                if (foundedKey.subKey) {
+                    btn.textContent = foundedKey.subKey
+                } else if (isLetter(foundedKey.mainKey)){
+                    btn.textContent = isCapsLock  ? foundedKey.mainKey.toLowerCase() : foundedKey.mainKey.toUpperCase(); 
+                }
+            }
+        })
+    }
+    const selectionStart = event.target.selectionStart;
+    const selectionEnd = event.target.selectionEnd;
+    console.log('Cursor position changed:', selectionStart, selectionEnd);
     console.log('keydown')
     let btns = document.querySelectorAll('button');
-   let pressedBtn = Array.from(btns).find(btn=>btn.getAttribute('code') == event.code);
-   pressedBtn.classList.add('pressed');
+    let pressedBtn = Array.from(btns).find(btn => btn.getAttribute('code') == event.code);
+    pressedBtn.classList.add('pressed');
     if (event.ctrlKey && event.shiftKey && (event.code === LEFT_SHIFT_KEY_CODE || event.code === LEFT_CONTROL_KEY_CODE)) {
         changeLanguage();
         return;
     }
 
-    if (event.code != "ArrowUp" && event.code != "ArrowDown" && event.code != "ArrowLeft" && event.code != "ArrowRight") {
-        event.preventDefault();
-    }
-    const keyObj = keys.find(x => x.code.toLowerCase() == event.code.toLowerCase());
+     event.preventDefault();
+    const keyObj = Array.from(buttons).find(x => x.getAttribute('code').toLowerCase() == event.code.toLowerCase());
     console.log(keyObj)
     if (keyObj) {
         handleKeyPress(keyObj);
     }
 });
 
-document.addEventListener('keypress', (event) => {
-console.log('keypress')
-    // let btns = document.querySelectorAll('button');
-    // let pressedBtn = Array.from(btns).find(btn=>btn.getAttribute('code') == event.code);
-    // pressedBtn.classList.remove('pressed');
-});
-
 document.addEventListener('keyup', (event) => {
     console.log('keyup')
-        let btns = document.querySelectorAll('button');
-        let pressedBtn = Array.from(btns).find(btn=>btn.getAttribute('code') == event.code);
-        pressedBtn.classList.remove('pressed');
-    });
+    if (event.code == LEFT_SHIFT_KEY_CODE || event.code == RIGHT_SHIFT_KEY_CODE) {
+        buttons.forEach((btn) => {
+            let foundedKey = keys.find(x=>x.code == btn.getAttribute('code'))
+            if(foundedKey){
+                if (foundedKey.subKey) {
+                    btn.textContent = foundedKey.mainKey;
+                } else if (isLetter(foundedKey.mainKey)){
+                    btn.textContent = isCapsLock  ? foundedKey.mainKey.toUpperCase() : foundedKey.mainKey.toLowerCase(); 
+                }
+            }
+        })
+    }
+    let btns = document.querySelectorAll('button');
+    let pressedBtn = Array.from(btns).find(btn => btn.getAttribute('code') == event.code);
+    pressedBtn.classList.remove('pressed');
+});
 subscribeOnKeyClickEvent();
-
-
-
 
 function initKeys() {
     let storedLang = sessionStorage.getItem('lang') || 'en';
@@ -116,88 +124,107 @@ function changeLanguage() {
 }
 
 function handleKeyPress(key) {
+    let code = key.getAttribute('code');
+    let mainKey = key.textContent;
     const ingoredKeys = [LEFT_SHIFT_KEY_CODE, RIGHT_SHIFT_KEY_CODE, RIGHT_CONTROL_KEY_CODE, LEFT_CONTROL_KEY_CODE, 'AltRight', 'AltLeft', 'MetaLeft']
-    if (ingoredKeys.includes(key.code)) {
+    if (ingoredKeys.includes(code)) {
         return;
     }
-    if (key.code === 'Backspace') {
-        textarea.value = textarea.value.slice(0, -1);
-    } else if (key.code === 'Delete') {
-        textarea.value = textarea.value.slice(1);
+    if (code === 'Backspace') {
+        let pos = textarea.selectionStart;
+        let result = textarea.value.slice(0, textarea.selectionStart - 1) + textarea.value.slice(textarea.selectionStart);
+        textarea.value =  result;
+        textarea.selectionStart = pos - 1;
+        textarea.selectionEnd = pos - 1;
+    } else if (code === 'Delete') {
+        let pos = textarea.selectionStart;
+        let result = textarea.value.slice(0, textarea.selectionStart) + textarea.value.slice(textarea.selectionStart + 1);
+        textarea.value =  result;
+        textarea.selectionStart = pos;
+        textarea.selectionEnd = pos;
     }
-    else if (key.code === 'ArrowDown') {
+    else if (code === 'ArrowDown') {
         moveCursorDown(textarea);
         textarea.focus();
     }
-    else if (key.code === 'ArrowUp') {
+    else if (code === 'ArrowUp') {
         moveCursorUp(textarea);
         textarea.focus();
-    } 
-    else if (key.code === 'ArrowLeft') {
+    }
+    else if (code === 'ArrowLeft') {
         moveCursorLeft(textarea);
         textarea.focus();
-    } 
-    else if (key.code === 'ArrowRight') {
+    }
+    else if (code === 'ArrowRight') {
         moveCursorRight(textarea);
         textarea.focus();
-    }     
-    else if (key.code === 'Tab') {
-        textarea.value += '\t';
-
-    } else if (key.code === 'Enter') {
-        textarea.value += '\n';
-    } else if (key.code === 'Space') {
-        textarea.value += ' ';
-    } else if (key.code === 'CapsLock') {
+    }
+    else if (code === 'Tab') {
+        addSymbolsAtPosition('\t', textarea);
+    } else if (code === 'Enter') {
+        addSymbolsAtPosition('\n', textarea);
+    } else if (code === 'Space') {
+        addSymbolsAtPosition(' ', textarea)
+    } else if (code === 'CapsLock') {
         toggleCapsLock();
     } else {
-
-        textarea.value += isCapsLock ? key.mainKey.toUpperCase() : key.mainKey;
-        textarea.selectionStart = textarea.selectionStart + 1;
+        addSymbolsAtPosition(mainKey, textarea);
         textarea.focus();
     }
 }
-function moveCursorDown(element) {
-    const currentPosition = element.selectionStart;
-    const lineBreakIndex = element.value.indexOf('\n', currentPosition);
-    if (lineBreakIndex === -1) {
-        element.selectionStart = element.selectionEnd = element.value.length;
-    
-    } else {
-        element.selectionStart = element.selectionEnd = lineBreakIndex + 1;
-    }
+
+function addSymbolsAtPosition(symbols, textarea) {
+    let pos = textarea.selectionStart;
+    let result = textarea.value.slice(0, textarea.selectionStart) + symbols + textarea.value.slice(textarea.selectionStart);
+    textarea.value = result;
+    textarea.selectionStart = pos + symbols.length;
+    textarea.selectionEnd = pos + symbols.length;
 }
+
+function moveCursorDown(textarea) {
+    const currentPosition = textarea.selectionStart;
+    const currentLine = textarea.value.substr(0, currentPosition).split("\n").length - 1;
+    const nextLineStart = textarea.value.indexOf("\n", currentPosition) + 1;
+    const nextLineEnd = textarea.value.indexOf("\n", nextLineStart);
+    const nextLineLength = (nextLineEnd === -1 ? textarea.value.length : nextLineEnd) - nextLineStart;
+    const nextPosition = Math.min(currentPosition + nextLineLength + 1, textarea.value.length);
+    textarea.selectionStart = nextPosition;
+    textarea.selectionEnd = nextPosition;
+  }
 
 function moveCursorLeft(element) {
     const currentPosition = element.selectionStart;
     element.selectionStart = element.selectionEnd = currentPosition - 1;
-  }
-  function moveCursorRight(element) {
+}
+function moveCursorRight(element) {
     const currentPosition = element.selectionStart;
-    element.selectionStart = element.selectionEnd = currentPosition + 1;
-  }
-
+    console.log(currentPosition)
+    element.selectionStart = currentPosition + 1;
+    element.selectionEnd = currentPosition + 1;
+    console.log( element.selectionStart)
+    console.log( element.selectionEnd)
+}
 
 function moveCursorUp(element) {
-    const currentPosition = element.selectionStart;
-    const lineBreakIndex = element.value.lastIndexOf('\n', currentPosition - 1);
-    if (lineBreakIndex === -1) {
-      element.selectionStart = element.selectionEnd = 0;
-    } else {
-      element.selectionStart = element.selectionEnd = lineBreakIndex + 1;
-    }
-  }
+    const currentPosition = textarea.selectionStart;
+    const currentLine = textarea.value.substr(0, currentPosition).split("\n").length - 1;
+    const prevLineStart = textarea.value.lastIndexOf("\n", currentPosition - 2) + 1;
+    const prevLineEnd = currentPosition - 1;
+    const prevLineLength = prevLineEnd - prevLineStart;
+    const prevPosition = Math.max(prevLineStart, currentPosition - prevLineLength - 2);
+    textarea.selectionStart = prevPosition;
+    textarea.selectionEnd = prevPosition;
+}
 
 function subscribeOnKeyClickEvent() {
     buttons.forEach(button => {
         button.addEventListener('click', (event) => {
             event.preventDefault();
-            const keyObj = keys.find(x => x.code.toLowerCase() == event.target.getAttribute('code').toLowerCase());
+            const keyObj = Array.from(buttons).find(x => x.getAttribute('code').toLowerCase() == event.target.getAttribute('code').toLowerCase());
             handleKeyPress(keyObj);
         });
     });
 }
-
 
 function toggleCapsLock() {
     isCapsLock = !isCapsLock;
