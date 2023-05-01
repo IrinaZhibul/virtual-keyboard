@@ -41,7 +41,7 @@ const keysBy = [
     { mainKey: 'ж', code: 'Semicolon' },
     { mainKey: 'э', code: 'Quote' },
     { mainKey: 'Enter', code: 'Enter', width: '140px' },
-    { mainKey: 'Shift', code: 'ShiftRight' , width: '140px'},
+    { mainKey: 'Shift', code: 'ShiftLeft' , width: '140px'},
     { mainKey: 'я', code: 'KeyZ' },
     { mainKey: 'ч', code: 'KeyX' },
     { mainKey: 'с', code: 'KeyC' },
@@ -53,8 +53,8 @@ const keysBy = [
     { mainKey: 'ю', code: 'Period' },
     { mainKey: '.', subKey: ',', code: 'Slash' },
     { mainKey: '↑', code: 'ArrowUp' },
-    { mainKey: 'Shift', code: 'ShiftLeft' , width: '140px'},
-    { mainKey: 'Ctrl', code: 'ControlRight' , width: '80px'},
+    { mainKey: 'Shift', code: 'ShiftRight' , width: '140px'},
+    { mainKey: 'Ctrl', code: 'ControlLeft' , width: '80px'},
     { mainKey: 'Win', code: 'MetaLeft' , width: '80px'},
     { mainKey: 'Alt', code: 'AltLeft' , width: '80px'},
     { mainKey: ' ', code: 'Space' , width: '320px'},
@@ -62,7 +62,7 @@ const keysBy = [
     { mainKey: '←', code: 'ArrowLeft' },
     { mainKey: '↓', code: 'ArrowDown' },
     { mainKey: '→', code: 'ArrowRight' },
-    { mainKey: 'Ctrl', code: 'ControlLeft' , width: '80px'},
+    { mainKey: 'Ctrl', code: 'ControlRight' , width: '80px'},
 ]
 
 export { keysBy };

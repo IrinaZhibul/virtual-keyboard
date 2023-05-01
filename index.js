@@ -10,7 +10,7 @@ const RIGHT_SHIFT_KEY_CODE = "ShiftRight";
 const LEFT_CONTROL_KEY_CODE = "ControlLeft";
 const RIGHT_CONTROL_KEY_CODE = "ControlRight";
 let currentLanguage;
-
+let cursorPosition;
 initKeys();
 
 const container = document.createElement('div');
@@ -19,6 +19,23 @@ const textarea = document.createElement('textarea');
 textarea.classList = 'textarea';
 document.body.appendChild(container);
 container.appendChild(textarea);
+const text1 = document.createElement('p');
+text1.classList = 'text';
+document.body.appendChild(text1);
+text1.textContent = 'Клавиатура создана в операционной системе Windows';
+const text2 = document.createElement('p');
+text2.classList = 'text';
+document.body.appendChild(text2);
+text2.textContent = 'Для переключения языка комбинация: левыe shift + ctrl';
+
+
+textarea.addEventListener('select', function(event) {
+    debugger;
+    const selectionStart = event.target.selectionStart;
+    const selectionEnd = event.target.selectionEnd;
+    console.log('Cursor position changed:', selectionStart, selectionEnd);
+  });
+
 
 let buttons = keys.map((key) => {
     const button = document.createElement('button');
@@ -32,6 +49,10 @@ let buttons = keys.map((key) => {
 
 
 document.addEventListener('keydown', (event) => {
+    console.log('keydown')
+    let btns = document.querySelectorAll('button');
+   let pressedBtn = Array.from(btns).find(btn=>btn.getAttribute('code') == event.code);
+   pressedBtn.classList.add('pressed');
     if (event.ctrlKey && event.shiftKey && (event.code === LEFT_SHIFT_KEY_CODE || event.code === LEFT_CONTROL_KEY_CODE)) {
         changeLanguage();
         return;
@@ -47,7 +68,19 @@ document.addEventListener('keydown', (event) => {
     }
 });
 
+document.addEventListener('keypress', (event) => {
+console.log('keypress')
+    // let btns = document.querySelectorAll('button');
+    // let pressedBtn = Array.from(btns).find(btn=>btn.getAttribute('code') == event.code);
+    // pressedBtn.classList.remove('pressed');
+});
 
+document.addEventListener('keyup', (event) => {
+    console.log('keyup')
+        let btns = document.querySelectorAll('button');
+        let pressedBtn = Array.from(btns).find(btn=>btn.getAttribute('code') == event.code);
+        pressedBtn.classList.remove('pressed');
+    });
 subscribeOnKeyClickEvent();
 
 
@@ -75,7 +108,9 @@ function changeLanguage() {
 
     if (buttons) {
         buttons.forEach((button, index) => {
-            button.textContent = keys[index].mainKey;
+            if (isCaseSensetive(keys[index])) {
+                button.textContent = isCapsLock ? keys[index].mainKey.toUpperCase() : keys[index].mainKey;
+            }
         });
     }
 }
@@ -116,7 +151,9 @@ function handleKeyPress(key) {
     } else if (key.code === 'CapsLock') {
         toggleCapsLock();
     } else {
+
         textarea.value += isCapsLock ? key.mainKey.toUpperCase() : key.mainKey;
+        textarea.selectionStart = textarea.selectionStart + 1;
         textarea.focus();
     }
 }
