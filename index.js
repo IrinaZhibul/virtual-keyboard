@@ -143,22 +143,6 @@ function handleKeyPress(key) {
         textarea.selectionStart = pos;
         textarea.selectionEnd = pos;
     }
-    else if (code === 'ArrowDown') {
-        moveCursorDown(textarea);
-        textarea.focus();
-    }
-    else if (code === 'ArrowUp') {
-        moveCursorUp(textarea);
-        textarea.focus();
-    }
-    else if (code === 'ArrowLeft') {
-        moveCursorLeft(textarea);
-        textarea.focus();
-    }
-    else if (code === 'ArrowRight') {
-        moveCursorRight(textarea);
-        textarea.focus();
-    }
     else if (code === 'Tab') {
         addSymbolsAtPosition('\t', textarea);
     } else if (code === 'Enter') {
@@ -179,41 +163,6 @@ function addSymbolsAtPosition(symbols, textarea) {
     textarea.value = result;
     textarea.selectionStart = pos + symbols.length;
     textarea.selectionEnd = pos + symbols.length;
-}
-
-function moveCursorDown(textarea) {
-    const currentPosition = textarea.selectionStart;
-    const currentLine = textarea.value.substr(0, currentPosition).split("\n").length - 1;
-    const nextLineStart = textarea.value.indexOf("\n", currentPosition) + 1;
-    const nextLineEnd = textarea.value.indexOf("\n", nextLineStart);
-    const nextLineLength = (nextLineEnd === -1 ? textarea.value.length : nextLineEnd) - nextLineStart;
-    const nextPosition = Math.min(currentPosition + nextLineLength + 1, textarea.value.length);
-    textarea.selectionStart = nextPosition;
-    textarea.selectionEnd = nextPosition;
-  }
-
-function moveCursorLeft(element) {
-    const currentPosition = element.selectionStart;
-    element.selectionStart = element.selectionEnd = currentPosition - 1;
-}
-function moveCursorRight(element) {
-    const currentPosition = element.selectionStart;
-    console.log(currentPosition)
-    element.selectionStart = currentPosition + 1;
-    element.selectionEnd = currentPosition + 1;
-    console.log( element.selectionStart)
-    console.log( element.selectionEnd)
-}
-
-function moveCursorUp(element) {
-    const currentPosition = textarea.selectionStart;
-    const currentLine = textarea.value.substr(0, currentPosition).split("\n").length - 1;
-    const prevLineStart = textarea.value.lastIndexOf("\n", currentPosition - 2) + 1;
-    const prevLineEnd = currentPosition - 1;
-    const prevLineLength = prevLineEnd - prevLineStart;
-    const prevPosition = Math.max(prevLineStart, currentPosition - prevLineLength - 2);
-    textarea.selectionStart = prevPosition;
-    textarea.selectionEnd = prevPosition;
 }
 
 function subscribeOnKeyClickEvent() {
