@@ -1,19 +1,19 @@
 .container {
     display: flex;
     flex-wrap: wrap;
-    width: 900px;
+    width: 960px;
     margin: 0 auto;
 }
 
-.textarea {
-    width: 890px;
+.textarea{
+    width: 940px;
     margin-left: 5px;
     height: 200px;
 }
 
 .btn {
     margin: 5px;
-    padding: 5px 15px;
+    padding: 5px 5px;
     font-size: 24px;
     transition:ease-in 0.5s;
 }
