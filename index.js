@@ -123,6 +123,7 @@ function handleKeyPress(key) {
     textarea.value = result;
     textarea.selectionStart = pos - 1;
     textarea.selectionEnd = pos - 1;
+    textarea.focus();
   } else if (code === 'Delete') {
     const pos = textarea.selectionStart;
     const result = textarea.value.slice(0, textarea.selectionStart)
@@ -130,6 +131,7 @@ function handleKeyPress(key) {
     textarea.value = result;
     textarea.selectionStart = pos;
     textarea.selectionEnd = pos;
+    textarea.focus();
   } else if (code === 'Tab') {
     addSymbolsAtPosition('\t', textarea);
   } else if (code === 'Enter') {
