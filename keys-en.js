@@ -26,7 +26,7 @@ const keysEn = [
   { mainKey: 'p', code: 'KeyP' },
   { mainKey: '[', subKey: '{', code: 'BracketLeft' },
   { mainKey: ']', subKey: '}', code: 'BracketRight' },
-  { mainKey: '~', code: 'BacksLash' },
+  { mainKey: '#', subKey: '~', code: 'Backslash' },
   { mainKey: 'Del', code: 'Delete', width: '80px' },
   { mainKey: 'Caps Lock', code: 'CapsLock', width: '140px' },
   { mainKey: 'a', code: 'KeyA' },
