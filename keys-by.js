@@ -26,7 +26,7 @@ const keysBy = [
   { mainKey: 'з', code: 'KeyP' },
   { mainKey: 'х', code: 'BracketLeft' },
   { mainKey: '\'', code: 'BracketRight' },
-  { mainKey: '\\', subKey: '/', code: 'BacksLash' },
+  { mainKey: '\\', subKey: '/', code: 'Backslash' },
   { mainKey: 'Del', code: 'Delete', width: '80px' },
   { mainKey: 'Caps Lock', code: 'CapsLock', width: '140px' },
   { mainKey: 'ф', code: 'KeyA' },
