@@ -1,5 +1,5 @@
-import keysEn from './keys-en';
-import keysBy from './keys-by';
+import keysEn from './keys-en.js';
+import keysBy from './keys-by.js';
 
 let keys;
 let isCapsLock = false;
